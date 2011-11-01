@@ -6,7 +6,7 @@ node-amd-loader adds the capability to load unmodified AMD (Asynchronous Module 
 Installation
 ------------
 
-`node-amd-loader` can be easily installed using (npm)[http://npmjs.org].
+`node-amd-loader` can be easily installed using [npm](http://npmjs.org).
 
     npm install amd-loader
     
@@ -21,7 +21,7 @@ Features
 
 ### load modules which use AMD define() ###
 
-Load modules which are written using  AMD (define)[http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition#define.28.29_function] from node.js node.
+Load modules which are written using  AMD [define](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition#define.28.29_function) from node.js node.
 
 amd.js
 
@@ -40,7 +40,7 @@ main.js
 
 ### support requireJS asyncronous loading syntax ###
 
-From within an AMD modules the async require syntax introduced by (requireJS)[http://requirejs.org] can be used.
+From within an AMD modules the async require syntax introduced by [requireJS](http://requirejs.org) can be used.
 
 ```javascript
     require(["fs"], function(fs) {
@@ -59,7 +59,7 @@ From within an AMD module the requireJS text plugin is supported.
 Credits
 -------
 
-(Kris Zip)[https://github.com/kriszyp] came up the the initial (idea)[https://gist.github.com/650000] how to hijack the node module loading.
+[Kris Zip](https://github.com/kriszyp) came up the the initial [idea](https://gist.github.com/650000) how to hijack the node module loading.
 
 License
 -------
