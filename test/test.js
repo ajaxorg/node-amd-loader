@@ -32,3 +32,4 @@ assert.equal(d.D, "D");
 
 // TODO
 // node_modules + package
+// async require
