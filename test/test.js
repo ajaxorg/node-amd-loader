@@ -1,4 +1,4 @@
-require("../lib/amd-loader");
+require("..");
 var assert = require("assert");
 
 console.log("Running amd-loader tests");

@@ -1,4 +1,3 @@
-var path = require("path");
 var fs = require("fs");
 var Module = require("module");
 
@@ -19,7 +18,7 @@ global.define = function (id, injects, factory) {
 
     // infere the module
     var currentModule = moduleStack[moduleStack.length-1];
-    var module = currentModule || require.main;
+    var mod = currentModule || module.parent || require.main;
     
     // parse arguments
     if (!factory) {
@@ -28,7 +27,7 @@ global.define = function (id, injects, factory) {
         if (factory) {
             // two args
             if (typeof id === "string") {
-                if (id !== module.id) {
+                if (id !== mod.id) {
                     throw new Error("Can not assign module to a different id than the current file");
                 }
                 // default injects
@@ -53,8 +52,9 @@ global.define = function (id, injects, factory) {
         }
         
         var chunks = relativeId.split("!");
+        var prefix;
         if (chunks.length >= 2) {
-            var prefix = chunks[0];
+            prefix = chunks[0];
             relativeId = chunks.slice(1).join("!");
         }
         
@@ -66,22 +66,22 @@ global.define = function (id, injects, factory) {
             return fs.readFileSync(fileName);
         } else
             return require(fileName);
-    }.bind(this, module);
+    }.bind(this, mod);
 
     injects.unshift("require", "exports", "module");
     
-    id = module.id;
+    id = mod.id;
     if (typeof factory !== "function") {
         // we can just provide a plain object
-        return module.exports = factory;
+        return mod.exports = factory;
     }
     
-    var returned = factory.apply(module.exports, injects.map(function (injection) {
+    var returned = factory.apply(mod.exports, injects.map(function (injection) {
         switch (injection) {
             // check for CommonJS injection variables
             case "require": return req;
-            case "exports": return module.exports;
-            case "module": return module;
+            case "exports": return mod.exports;
+            case "module": return mod;
             default:
                 // a module dependency
                 return req(injection);
@@ -90,6 +90,6 @@ global.define = function (id, injects, factory) {
     
     if (returned) {
         // since AMD encapsulates a function/callback, it can allow the factory to return the exports.
-        module.exports = returned;
+        mod.exports = returned;
     }
 };
