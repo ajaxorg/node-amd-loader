@@ -29,6 +29,12 @@ var d = require("d");
 
 assert.equal(d.D, "D");
 
+console.log("inject amd deps");
+var g = require("g");
+
+assert.equal(g.A, "A");
+assert.equal(g.G, "G");
+
 // TODO
 // node_modules + package
 // async require
