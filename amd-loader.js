@@ -22,6 +22,7 @@ global.define = function (id, injects, factory) {
     
     // parse arguments
     if (!factory) {
+        var defaultInjects = ["require", "exports", "module"];
         // two or less arguments
         factory = injects;
         if (factory) {
@@ -31,17 +32,17 @@ global.define = function (id, injects, factory) {
                     throw new Error("Can not assign module to a different id than the current file");
                 }
                 // default injects
-                injects = [];
+                injects = defaultInjects;
             }
             else{
                 // anonymous, deps included
-                injects = id;          
+                injects = id;
             }
         }
         else {
             // only one arg, just the factory
             factory = id;
-            injects = [];
+            injects = defaultInjects;
         }
     }
 
@@ -67,8 +68,6 @@ global.define = function (id, injects, factory) {
         } else
             return require(fileName);
     }.bind(this, mod);
-
-    injects.unshift("require", "exports", "module");
     
     id = mod.id;
     if (typeof factory !== "function") {
