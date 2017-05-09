@@ -64,7 +64,7 @@ global.define = function (id, injects, factory) {
             fileName = fileName[0];
         
         if (prefix && prefix.indexOf("text") !== -1) {
-            return fs.readFileSync(fileName);
+            return fs.readFileSync(fileName, "utf8");
         } else
             return require(fileName);
     }.bind(this, mod);
