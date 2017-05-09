@@ -14,36 +14,29 @@ module.constructor.prototype._compile = function(content, filename){
     }
 };
 
-global.define = function (id, injects, factory) {
+global.define = function (id, deps, factory) {
+    // Allow for anonymous modules
+    if (typeof id !== "string") {
+        factory = deps;
+        deps = id;
+        id = null;
+    }
+    // This module may not have dependencies
+    if (deps && !Array.isArray(deps)) {
+        factory = deps;
+        deps = null;
+    }
+    if (!deps) {
+        deps = ["require", "exports", "module"];
+    }
 
-    // infere the module
+    // infer the module
     var currentModule = moduleStack[moduleStack.length-1];
     var mod = currentModule || module.parent || require.main;
-    
-    // parse arguments
-    if (!factory) {
-        var defaultInjects = ["require", "exports", "module"];
-        // two or less arguments
-        factory = injects;
-        if (factory) {
-            // two args
-            if (typeof id === "string") {
-                if (id !== mod.id) {
-                    throw new Error("Can not assign module to a different id than the current file");
-                }
-                // default injects
-                injects = defaultInjects;
-            }
-            else{
-                // anonymous, deps included
-                injects = id;
-            }
-        }
-        else {
-            // only one arg, just the factory
-            factory = id;
-            injects = defaultInjects;
-        }
+
+
+    if (typeof id === "string" && id !== mod.id) {
+        throw new Error("Can not assign module to a different id than the current file");
     }
 
     var req = function(module, relativeId, callback) {
@@ -75,7 +68,7 @@ global.define = function (id, injects, factory) {
         return mod.exports = factory;
     }
     
-    var returned = factory.apply(mod.exports, injects.map(function (injection) {
+    var returned = factory.apply(mod.exports, deps.map(function (injection) {
         switch (injection) {
             // check for CommonJS injection variables
             case "require": return req;
